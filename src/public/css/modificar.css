@@ -1,0 +1,23 @@
+.form-control{
+  width: 300px;
+}
+
+/* fondo y color del texto blanco */
+body{
+  background-color: #202124;
+  color: white;
+}
+
+/* linea del centro para dividir */
+.medio{
+  background-color: rgb(10, 10, 10);
+  height: 0.1px;
+}
+
+/* posicion de algunos cuadros */
+#cuadro{
+ position:fixed;
+  left:  40px;
+  overflow-y:scroll;
+  height:600px;
+}

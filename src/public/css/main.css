@@ -1,0 +1,32 @@
+body {
+  background: #202124;
+  color: white;
+}
+
+.navbar-brand {
+  font-family: 'Roboto', sans-serif;
+  /* font-size: 1.5rem; */
+  color: white;
+}
+
+.nav-link {
+  text-transform: uppercase;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+}
+
+header img {
+  width: 100%;
+}
+
+header h1 {
+  font-size: 19px;
+}
+
+header h2 {
+  font-size: 29px;
+}
+
+a {
+  margin-left: 20px;
+}

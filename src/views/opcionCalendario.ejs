@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- opciones para el horario del peluquero -->
+<head>
+  <meta charset="UTF-8" />
+  <title>opcionCalendario</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <%- include("partials/head") %>
+</head>
+
+<body>
+  <%- include("partials/navigation") %>
+  <hr>
+  <!-- contener que cuenta con los 3 tipos de horarios disponibles para que el peluquero eliga su horario del dia -->
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+      <div class="card animated flipInX bg-dark p-3 border-secondary">
+        <div class="card-header bg-dark text-white text-center">
+          <h3>Seleccionar horario</h3>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <select class="form-select" id="opcionCalendarioPeluquero">
+                <option selected>Choose...</option>
+                <option value="1">Horario Completo 7am to 6pm</option>
+                <option value="2">Horario Mañana 7am to 12pm</option>
+                <option value="3">Horario Tarde 1pm to 6pm</option>
+              </select>
+            </div>
+            <!-- button que selecciona el horario -->
+            <button class="btn btn-secondary btn-block" id="submit">Seleccionar</button>
+          </div>
+        </div>  
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const day = sessionStorage.getItem("Day");
+
+      document.querySelector('#submit').addEventListener('click', (event) => {
+      event.preventDefault()
+
+      const opCalendarioP = document.getElementById('opcionCalendarioPeluquero').value;
+      // llamada a post crearhorario
+      fetch('http://localhost:3000/crearhorario', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // cada usuario peluquero guarda su horario por medio de su id
+          body: JSON.stringify({dia : day, timetable: opCalendarioP, correo:sessionStorage.getItem("usuarioID")})
+        })
+          .then(res => {
+            res.json().then(alertr => {
+              Swal.fire(alertr.titulo, alertr.descripcion, alertr.icono);
+              if (alertr.status) {
+                setTimeout(function () {
+                  window.open("/calendarioLaboral","_self");
+                }, 2500);
+              }
+            })
+          })  
+        });
+    </script>
+</body>
+
+</html>

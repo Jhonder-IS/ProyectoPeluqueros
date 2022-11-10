@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- Titulo de calendario -->
+  <title>Calendario</title>
+  <!-- Rel es el tipo de fuente, mientras href hace referencia al css  -->
+  <link rel="stylesheet" href="/css/calendario.css">
+  <%- include("partials/head") %>
+</head>
+
+<body>
+  <%- include("partials/navigation") %>
+  <hr>
+  <!-- Se le asignan un id a cada variable-->
+    <div id="container">
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <!-- Se asigan id y ademan se asigana una accion al boton-->
+          <button id="citasDia" onclick="verCitasDia()">Ver Citas del dia</button>
+          <button id="backButton">Anterior</button>
+          <button id="nextButton">Siguiente</button>
+        </div>
+      </div>
+
+      <!--Se asignan los dias de la semana-->
+      <div id="weekdays">
+        <div>Domingo</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lunes</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Martes</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miércoles</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jueves</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Viernes
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sábado
+        </div>
+      </div>
+    <!--Se asigna id-->
+      <div id="calendar"></div>
+    </div>
+    <!--Declaramos el nuevo evento y pone un titulo-->
+    <div id="newEventModal">
+      <h2>Nuevo Evento</h2>
+    <!--Debe escribir-->
+      <input id="eventTitleInput" placeholder="Evento" />
+    <!--Se le asigna una id y accion de guardar y cancelar-->
+      <button id="saveButton">Guardar</button>
+      <button id="cancelButton">Cancelar</button>
+    </div>
+    <!--La accion de eliminas-->
+    <div id="deleteEventModal">
+      <h2>Evento</h2>
+
+      
+      <p id="eventText"></p>
+
+      <!--Se declara el boton de borrar y cerrar-->
+      <button id="deleteButton">Borrar</button>
+      <button id="closeButton">Cerrar</button>
+    </div>
+
+    <!--  id para el fondo-->
+    <div id="modalBackDrop"></div>
+
+    <!--  ruta que apunta a calendario.js-->
+    <script src="/scripts/calendarioConsultas.js"></script>
+
+    <!-- creación de interfaces limpias y con un diseño responsive usamos boostrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

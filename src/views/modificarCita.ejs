@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <!-- Se llaman fonts e iconos ademas de colores para que la pestana se vea mas linda -->
+    <%- include("partials/head") %>
+    <!-- Utilizamos sweet alert para mostrar alertas al usuario -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <!-- usamos bootstrap para que el codigo se nos facilite al crear botones y demas cosas como los form... -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <title>Modificar Citas</title>
+    <!-- utilizamos los estilos con css del modificar.css para quee se vea mas lindo el codigo -->
+    <link rel="stylesheet" href="/css/modificar.css">
+    <br>
+</head>
+
+<body>
+  <!-- Llamamos a la clase que contiene la barra de navegacion para mostrarla en la pestana-->
+<%- include("partials/navigation") %>
+<hr>
+
+  <!-- utilizamos div para ponerle la posicion al div que tiene la tabla con la informacion -->
+  <div class="container mt-4 shadow-lg p-3 mb-5 bg-dark rounded " id="cuadro">
+    <br>
+    <!-- Aqui se va a mostrar la informacion en una tabla a la que le aplicamos estilos -->
+    <table class="table table-bordered table-striped table-dark ">
+      <thead>
+        <tr>
+          <th>Id Cita</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody id="data">
+          <!-- Aqui vamos a solicitar las horas y fechas de las citas para que se puedan modificar con la informacion que se tenga -->
+          <div class="mb-3">
+            <label for="fecha">Digite la fecha de la cita reservada</label>
+            <input id="fecha" class="form-control" type="text" autocomplete="off" required
+              placeholder="mm/dd/aaaa" />
+          </div>
+          <div class="mb-3">
+            <label for="hora">Digite la hora de la cita reservada</label>
+            <input id="hora" class="form-control" type="text" autocomplete="off" required placeholder="hh:mm am/pm" />
+          </div>
+         <br>
+         
+          <div class="medio"> </div>
+          <br>
+         
+          <div class="mb-3">
+            <label for="fechaN">Digite la nueva fecha </label>
+            <input id="fechaN" class="form-control" type="text" autocomplete="off" required
+              placeholder="mm/dd/aaaa" />
+          </div>
+          <div class="mb-3">
+            <label for="horaN">Digite la nueva hora</label>
+            <input id="horaN" class="form-control" type="text" autocomplete="off" required placeholder="hh:mm am/pm" />
+          </div>
+         <br>
+        <button type="button" class="btn btn-secondary btn-sm" id="modificar">Modificar</button>
+        <br>
+        <br>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Aqui se hace el script para la llamada fetch
+    // Aqui se hace hace la llamada para mostrar las citas
+      fetch(`http://localhost:3000/citas/'${sessionStorage.getItem("usuarioID")}'`)
+       .then(response => response.json())
+       .then(data => mostrarData(data))
+       .catch(error => console.log(error))
+
+      const mostrarData = (data) =>{
+        console.log(data)
+        let body = ""
+        for(let i = 0; i < data.length; i++){
+          body += `<tr><td> ${i+1}</td><td> ${data[i].dia}</td><td> ${data[i].hora}</td><tr>`
+        }
+        document.getElementById('data').innerHTML =body
+      }
+
+      // aqui se hacen acciones si se le da click al boton con el id
+      document.querySelector('#modificar').addEventListener('click', (event) => {
+        event.preventDefault()
+        // Se extrae la informacion de las fechas y horas
+        const diaNuevo = document.getElementById('fechaN').value;
+        const horaNueva = document.getElementById('horaN').value;
+        const dia = document.getElementById('fecha').value;
+        const hora = document.getElementById('hora').value;
+        // Aqui se le obliga al usuario a completar todos los espacios de las fechas y horas
+        if(diaNuevo.trim().length === 0 || horaNueva.trim().length === 0 || dia.trim().length === 0 || hora.trim().length === 0){
+          Swal.fire({
+            title: 'Error con los datos',
+            text: "Todos los campos son obligatorios",
+            icon: 'warning',
+          })
+        }else{
+          Swal.fire({
+          title: '¿Seguro desea modificar la cita?',
+          text: "Para el día "+diaNuevo+" y la hora "+horaNueva,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí'
+          }).then((result) => {
+          if (result.isConfirmed) {
+            //Aqui se hace una llamada fetch al idex.js al metodo que realiza las evaluaciones y acciones necesarias
+            fetch(`http://localhost:3000/modificarcita/'${sessionStorage.getItem("usuarioID")}'`,{
+            method: 'PUT',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ diaNuevo: diaNuevo,horaNueva:horaNueva,dia: dia,hora:hora})
+            }).then(res => {
+              res.json().then(alert => {
+                // aqui se manda la alerta y se redirecciona a una pestana diferente
+                  Swal.fire(alert.titulo,alert.descripcion,alert.icono)
+                  setTimeout(function () {
+                    window.location.href = alert.path;
+                  }, 2500);
+              })
+            })
+          }
+
+          }) 
+        }
+      })
+      
+  </script>
+
+</body>
+</html>

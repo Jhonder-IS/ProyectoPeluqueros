@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("partials/head") %>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!--Bootstrap para crear la tabla que muestra las citas del usuario-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.rtl.min.css"
+      integrity="sha384-+4j30LffJ4tgIMrq9CwHvn0NjEvmuDCOfk6Rpg2xg7zgOxWWtLtozDEEVvBPgHqE" crossorigin="anonymous">
+<!--Utiliza CSS de modificar-->
+    <link rel="stylesheet" href="/css/modificar.css">
+
+    
+</head>
+
+
+<body>
+  <!--Cuerpo y division de la infomacion de las citas que tiene agendadas el usuario-->
+  <%- include("partials/navigation") %>
+  <hr>
+    <br><br>
+      <table class="table table-dark">
+        <thead>
+          <th>Cita</th>
+          <th>Hora</th>
+          <th> Fecha </th>
+          <th>Peluquero</th>
+          <th>Celular Peluquero</th>
+          <th>Correo  Peluquero</th>
+        </thead>
+        <tbody id="data">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <script>
+/**
+ * Fech que hace un get a citas y por medio del id del usuario, 
+ * hace las promesas para mostrar la informacion de las citas.
+ */
+      fetch(`http://localhost:3000/citas/'${sessionStorage.getItem("usuarioID")}'`)
+        .then(response => response.json())
+        .then(data => mostrarData(data))
+        .catch(error => console.log(error))
+
+//Promesa para obtener los datos a presentar en la tabla.
+      const mostrarData = (data) => {
+        console.log(data)
+        let body = ""
+        for (let i = 0; i < data.length; i++) {
+          body += `<tr><td> ${i+1}</td><td> ${data[i].hora}</td><td> ${data[i].dia}</td><td>${data[i].nombre}</td><td>${data[i].celular}</td><td>${data[i].correo}</td><tr>`
+        }
+        document.getElementById('data').innerHTML = body
+      }
+    </script>
+
+</body>
+
+</html>

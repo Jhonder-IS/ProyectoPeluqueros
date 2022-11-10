@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- Titulo de calendario -->
+  <title>Calendario</title>
+  <!-- Tipo de fuente ademas de que se hace la referencia a otro documento como es el del calendario.css -->
+  <link rel="stylesheet" href="/css/calendario.css">
+  <%- include("partials/head") %>
+</head>
+
+<body>
+
+  <%- include("partials/navigation") %>
+  <hr>
+  <!-- Se le asigna un id a cada variable -->
+    <div id="container">
+      <div id="header">
+        <div id="monthDisplay"></div>
+        <div>
+          <!-- Botones de siguiente y anterior -->
+          <button id="backButton">Anterior</button>
+          <button id="nextButton">Siguiente</button>
+        </div>
+      </div>
+    <!-- Declaramos los dias de la semana -->
+      <div id="weekdays">
+        <div>Domingo</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lunes</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Martes</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miércoles</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jueves</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Viernes
+        </div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sábado
+        </div>
+      </div>
+
+      <div id="calendar"></div>
+    </div>
+
+    <div id="newEventModal">
+      <!-- titulo -->
+      <h2>Nuevo Evento</h2>
+<!-- debe escribir en un campo del formulario -->
+      <input id="eventTitleInput" placeholder="Evento" />
+<!-- botones de guardar y cancelar -->
+      <button id="saveButton">Guardar</button>
+      <button id="cancelButton">Cancelar</button>
+    </div>
+<!-- declaramos variable para borrar -->
+    <div id="deleteEventModal">
+      <h2>Evento</h2>
+
+      <p id="eventText"></p>
+<!-- creacion de dos botones para borrar y cerrar -->
+      <button id="deleteButton">Borrar</button>
+      <button id="closeButton">Cerrar</button>
+    </div>
+<!-- id para el fondo -->
+    <div id="modalBackDrop"></div>
+<!--  ruta que apunta a calendario.js-->
+    <script src="/scripts/calendario.js"></script>
+<!-- creación de interfaces limpias y con un diseño responsive usamos boostrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.rtl.min.css" integrity="sha384-+4j30LffJ4tgIMrq9CwHvn0NjEvmuDCOfk6Rpg2xg7zgOxWWtLtozDEEVvBPgHqE" crossorigin="anonymous">
+    <title>Consultar</title>
+    <!--Se llama a la clase del css para darle estilos y colores a la pestana del login-->
+  <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <!-- se crea la tabla que muestra las citas del peluquero -->
+    <br>
+    <div id="intro" class=" container  text-center ">Citas para </div>
+    <br>
+      <div class="table-responsive">
+       <table class="table table-dark">
+      <thead>
+        <th>Cita</th>
+        <th>Hora</th>
+        <th>Usuario</th>
+        <th>Celular Usuario</th>
+        <th>Correo Usuario</th>
+      </thead>
+       <tbody id="data">
+       </tbody>
+        </table>
+    </div>
+    <script>
+      const day = sessionStorage.getItem("Day");
+      const intro =  document.getElementById("intro");
+      intro.textContent = intro.textContent+day;
+      
+      // llamada al fecth getCitasPeluquero/:id
+      fetch(`http://localhost:3000/getCitasPeluquero/'${sessionStorage.getItem("usuarioID")}'`)
+       .then(response => response.json())
+       .then(data => mostrarData(data))
+       .catch(error => console.log(error))
+       
+      const mostrarData = (data) =>{
+        console.log(data)
+        let body = ""
+        let cita=0
+        // por medio de un for se recorre data y se va creando un areglo para almacenar los datos de cada usuario que tenga citas registradas
+        for(let i = 0; i < data.length; i++){
+          if(data[i].dia === day){
+            body += `<tr><td>${cita+1}</td><td> ${data[i].hora}</td><td> ${data[i].nombre}</td><td>${data[i].celular}</td><td>${data[i].correo}</td><tr>`
+            cita++
+          }
+        }
+        
+        document.getElementById('data').innerHTML =body
+      }
+    </script>
+    </body>
+</html>

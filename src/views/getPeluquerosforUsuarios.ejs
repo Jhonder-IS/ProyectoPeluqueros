@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Peluqueros</title>
+  <!--Sweetalert-->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--Utiliza CSS de main-->
+  <link rel="stylesheet" href="/css/main.css">
+  <%- include("partials/head") %>
+</head>
+
+<body>
+  <%- include("partials/navigation") %>
+<hr>
+  
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card animated flipInX bg-dark p-3 border-secondary">
+      <div class="card-header bg-dark text-white text-center">
+        <h3>Seleccione su peluquero de preferencia:</h3>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <div class="input-group mb-3">
+            <select class="form-select" id="getPeluqueros">
+              <!--Opciones de peluquero que escoge el cliente-->
+                <option selected>Choose...</option>
+              </select>
+          </div>
+          <!--Boton para aceptar-->
+          <button class="btn btn-secondary btn-block" id="submit">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+   <!--Bootstrap que utiliza-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script> 
+  /**
+   * fetch hacia get usuarios para cargarlos en las opciones
+   */ 
+   fetch(`http://localhost:3000/usuarios`)
+       .then(response => response.json())
+       .then(data => obtenerData(data))
+       .catch(error => console.log(error))
+    //Recorre el json que responde el fetch para llenar las opciones  
+    const obtenerData = (data) =>{
+        let body = "";
+        body += `<option>Choose...</option>`;
+        for(let i = 0; i < data.length; i++){
+          if(data[i].tipo === 1){
+          body += `<option 
+          value="${data[i].id}" id="${data[i].nombre}">${data[i].nombre} - ${data[i].correo}</option>`
+          }
+        }
+        //Asigna los valores a la lista de opciones
+        document.getElementById('getPeluqueros').innerHTML = body
+      }
+    /**
+     * Metodo que ocurre cuando se presiona el boton de aceptar
+     */ 
+    document.querySelector('#submit').addEventListener('click', (event) => {
+    event.preventDefault()
+    
+    const getPeluquero = document.getElementById('getPeluqueros').value;
+    //En caso de que no seleccione ninguna opcion
+    if(getPeluquero === "Choose..."){
+        Swal.fire(
+        'Error',
+        'Favor seleccione un peluquero',
+        'error'
+        )
+    }else{
+    sessionStorage.setItem("PeluqueroAsignado",getPeluquero);
+    window.open("/calendario", "_self");
+   }
+    });
+  </script>

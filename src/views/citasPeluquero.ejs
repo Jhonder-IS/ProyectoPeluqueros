@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Bootstrap para la tabla de las citas del peluquero-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.rtl.min.css" integrity="sha384-+4j30LffJ4tgIMrq9CwHvn0NjEvmuDCOfk6Rpg2xg7zgOxWWtLtozDEEVvBPgHqE" crossorigin="anonymous">
+
+    <title> CitasPeluquero</title>
+    <!--CSS para modificar el color-->
+    <style>
+      body{
+        background-color: #202124;
+        color: white;
+      }
+     
+    </style>
+  </head>
+  <body>
+
+    <!--Etiquetas y cuerpos de la tabla de cita--> 
+    <h4>Citas del día </h4>
+      <div class="table-responsive">
+       <table class="table table-dark">
+      <thead>
+        <!--Etiquetas en las que se divide la infomacion de la tabla-->
+        <th> Id Cita </th>
+        <th> Hora </th>
+        <th>Usuario Cliente</th>
+      </thead>
+       <tbody id="data">
+
+       </tbody>
+
+     </table>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script>
+      /**
+       * Fech que accede al get de las citas de peluquero para mostrar datos en la tabla.
+      */
+      fetch('http://localhost:3000/citas')
+       .then(response => response.json())
+       .then(data => mostrarData(data))
+       .catch(error => console.log(error))
+
+/** 
+ * Obtiene la informacion para poner los datos en  la tabla.
+ */
+      const mostrarData = (data) =>{
+        console.log(data)
+        let body = ""
+        for(let i = 0; i < data.length; i++){
+          body += `<tr><td> ${data[i].id}</td><td> ${data[i].hora}</td><td> ${data[i].usuario}</td><tr>`
+        }
+        //obtinene los elementos.
+        document.getElementById('data').innerHTML =body
+      }
+    </script>
+ 
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title> Inicio </title>
+  <!--Se llama a la clase del css para darle estilos y colores a la pestana del login-->
+  <link rel="stylesheet" href="/css/main.css">
+  <!--utlizamos sweet alert para mostrar alertas a el usuario-->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--Aqui se utilizan estilos de letra, iconos y demas para que la pagina se vea mejor-->
+  <%- include("partials/head") %>
+</head>
+
+<body>
+  <!--Aqui llamamos a la barra de navegacion-->
+  <%- include("partials/navigation") %>
+  <hr>
+  <!--Aqui se utilizan div para centrar el contenido con su clase que utiliza css, en estos div 
+  tambien se le da animacion y es donde va el form para que el usuario ingrese-->
+    <div class="container vh-100 d-flex justify-content-center align-items-center ">
+      <div class="card animated flipInX bg-dark p-3 border-secondary">
+        <div class="card-header background-color: #202124 text-white text-center">
+          <h3>Ingresar</h3>
+        </div>
+        <div class="card-body ">
+        <!--Aqui inicia el form donde se le solicita al usuario el correo y la contrasena 
+        que se debe encontrar en la base de datos para poder ingresar correctamente-->
+          <form id="formulario" action="">
+            <div class="mb-3">
+              <label for="email">Email:</label>
+              <input class="form-control" type="email" id="mailID" autocomplete="off" placeholder="Email" />
+            </div>
+            <div class="mb-3">
+              <label for="password">Contraseña:</label>
+              <input class="form-control" type="password" id="passwordID" autocomplete="off" placeholder="Contraseña" />
+            </div>
+            <button class="btn btn-secondary btn-block" id="submit">Ingresar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--Aqui se llama al script para que le de las funciones luego de presionado el boton, 
+    esas acciones son como almacenar los datos ingresados en los input y crear una evaluacion 
+    para seber si se encuentra el usuario en la base de datos-->
+    <script>
+      //Aqui hacemos que si se le da click al boton se realicen las acciones que vienen dentro
+document.querySelector('#submit').addEventListener('click', (event) => {
+    event.preventDefault()
+    //Extraemos los valores del correo segun su id
+    var mailDij = document.getElementById('mailID').value;
+    //Extraemos los valores del password segun su id
+    var contrasenaDij = document.getElementById('passwordID').value;
+    //el siguiente if es un condicional en el que se envia una alerta en el caso de que no se completen todos los campos
+    if(mailDij.trim().length===0 || contrasenaDij.trim().length ===0){
+      Swal.fire({
+        title: 'Error con los datos',
+        text: "Todos los campos son obligatorios",
+        icon: 'warning',
+      })
+    //en el caso de que la condicion anterior no se cumpla va a entrar al siguiente if donde se realizan acciones
+    }else{
+      // Aqui se hace una llamada fetch a una de las funciones que se tiene en index.js 
+      // donde se realizan funciones como evaluar que el usuario exista y mandar parametros 
+      // para una alerta y un path para ir a la siguiente pestana
+      fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      //Pasamos correo y contrasena 
+      body: JSON.stringify({ correo: mailDij, contrasena: contrasenaDij })
+    })
+      // obtenemos las respuestas de los json que nos retorna el metodo de la llamada fetch que se encuentra en el index.js
+      .then(res => {
+        res.json().then(alert => {
+          // guardamos en el session storage para mostrarlo posteriormente
+          sessionStorage.setItem("usuarioID",alert.id);
+          // se muestra alerta
+          Swal.fire(alert.titulo, alert.descripcion, alert.icono);
+          document.getElementById('formulario').reset();
+          // aqui se va a establecer un tiempo para luego ir a la siguiente pagina segun 
+          // el estado de la alerta, puede estar en true o en false segun lo que se enie desde el metodo de la llamada fetch
+          if (alert.status) {
+            setTimeout(function () {
+              window.location.href = alert.path;
+            }, 2500);
+          }
+        })
+      })
+    }
+  })
+    </script>
+    <!--aqui se utiliza el footer para mostrar contenido en lo mas bajo de la pagina-->
+    <hr>
+    <%- include("partials/footer") %>
+</body>
+
+</html>

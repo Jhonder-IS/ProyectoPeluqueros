@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Pagina de registro</title>
+  <!--Se llama al link para poder utilizar los iconos-->
+  <link rel="shortcut icon" href="#">
+  <!--Usamos sweet alert para poder mostrar alertas al usuario-->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--Aqui se llaman iconos y estilos para que la pagina se vea mas linda-->
+  <%- include("partials/head") %>
+    <!--Se utiliza el css para darle los estlos-->
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <!--Se utiliza la barra de navegacion-->
+  <%- include("partials/navigation") %>
+    <hr>
+    <!--Aqui se tulizan div para centrar el contenido y darle movimineto 
+  a el cuadro donde va el form para registrarse-->
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+      <div class="card animated flipInX bg-dark p-3 border-secondary">
+        <div class="card-header bg-dark text-white text-center">
+          <h3>Registrate</h3>
+        </div>
+        <div class="card-body">
+          <!--Aqui empieza el formulario donde se le puede agregar el nombre del usuario, 
+        el tipo(peluquero o cliente), el correo, contrasena y telefono del usuarui-->
+          <form id=formulario action="">
+            <div class="mb-3">
+              <label for="name">Nombre:</label>
+              <input id="nombreID" class="form-control" type="text" nombre="nombre" autocomplete="off"
+                placeholder="Nombre" />
+            </div>
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <select class="form-select" id="inputGroupSelect01">
+                  <option selected>Choose...</option>
+                  <option value="1">Peluquero</option>
+                  <option value="0">Cliente</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="email">Email:</label>
+              <input id="mailID" class="form-control" type="email" autocomplete="off" required placeholder="Email" />
+            </div>
+            <div class="mb-3">
+              <label for="password">Contraseña:</label>
+              <input id="passwordID" class="form-control" type="password" autocomplete="off" required
+                placeholder="Contraseña" />
+            </div>
+            <div class="mb-3">
+              <label for="telefono">telefono:</label>
+              <input id="telefonoID" class="form-control" type="number" required placeholder="Telefono" />
+            </div>
+            <button class="btn btn-secondary btn-block" id="submit">Registrarse</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--llamamos a la clase javascript que le da las funciones a los botones para 
+    que ejecuten acciones con lo que tengan los input que se guardan en esa misma clase-->
+    <script>
+      // cuando le da registrar, valida que  existan todos los campos 
+      document.querySelector('#submit').addEventListener('click', (event) => {
+        event.preventDefault()
+
+        var nombreDij = document.getElementById('nombreID').value;
+        var TipoDij = document.getElementById('inputGroupSelect01').value;
+        var mailDij = document.getElementById('mailID').value;
+        var contrasenaDij = document.getElementById('passwordID').value;
+        var telefonoDij = document.getElementById('telefonoID').value;
+
+        if (nombreDij.trim().length === 0) {// valida que el nombre no este vacío 
+          errorDato("El nombre no es válido")
+        } else {
+          if (TipoDij === "Choose...") {// valida que el tipo se haya escogido
+            errorDato("El tipo no es válido")
+          } else {
+            if (mailDij.trim().length === 0 || validarCorreo(mailDij) === false) {// valida que el correo no sea nulo y que termine en @gmail.com
+              errorDato("El correo no es válido, debe terminar en @gmail.com")
+            } else {
+              if (contrasenaDij.trim().length === 0) {// valida que la  contraseña no sea vacía
+                errorDato("La contraseña no es válida")
+              } else {
+                if (telefonoDij.trim().length === 0) { // valida que el telefono no este vacío 
+                  errorDato("El telefono no es válido")
+                } else { /// si todos los datos son válidos se ejectuta el fecth, que sirve para agregar el usuario
+                  fetch('http://localhost:3000/add', {
+                    method: 'POST',
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ nombre: nombreDij, tipo: TipoDij, correo: mailDij, contrasena: contrasenaDij, celular: telefonoDij })
+                  })
+                    .then(res => {
+                      res.json().then(alertr => {//una vez se termine la llamada a la base de datos se lanza una alerta 
+                        Swal.fire(alertr.titulo, alertr.descripcion, alertr.icono);
+                        document.getElementById('formulario').reset();
+                        if (alertr.status) {
+                          setTimeout(function () {//// se devuelve a la página principal
+                            window.location.href = "/";
+                          }, 2500);
+                        }
+                      })
+                    })
+                }
+              }
+            }
+          }
+        }
+      })
+
+      function errorDato(detalle) {// si algun dato no es válido se llama a esta función con una descripción para que lanze la alerta
+        Swal.fire({
+          title: 'Error con los datos',
+          text: detalle,
+          icon: 'warning',
+        })
+      }
+
+      function validarCorreo(mailID) {/// vlida que el correo sea válido 
+        var arroba = new Boolean(false);
+        let correoV = "";
+        for (let i = 0; i < mailID.trim().length; i++) {
+          if ((mailID[i] === '@' || arroba === true) && i > 0) {
+            correoV += mailID[i];
+            arroba = true;
+          }
+        }
+        if (correoV === "@gmail.com") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    </script>
+
+    <!--aqui se utiliza el footer para mostrar contenido en lo mas bajo de la pagina-->
+    <hr>
+    <%- include("partials/footer") %>
+</body>
+
+</html>
